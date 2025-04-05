@@ -1,0 +1,301 @@
+{% extends "app/base.html" %}
+
+{% block viewbook %}
+<style>
+    .book-details-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+    
+    .book-details-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 30px;
+        text-align: center;
+        position: relative;
+        padding-bottom: 15px;
+    }
+    
+    .book-details-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(90deg, #4CAF50, #2196F3);
+        border-radius: 2px;
+    }
+    
+    .book-card {
+        background-color: #fff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 40px;
+    }
+    
+    .book-header {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 30px;
+        background: linear-gradient(to right, #f9f9f9, #fff);
+        border-bottom: 1px solid #eee;
+    }
+    
+    .book-cover {
+        width: 250px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        margin-right: 30px;
+        object-fit: cover;
+    }
+    
+    .book-primary-info {
+        flex: 1;
+        min-width: 250px;
+    }
+    
+    .book-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 10px;
+        line-height: 1.3;
+    }
+    
+    .book-author {
+        font-size: 20px;
+        color: #666;
+        margin-bottom: 20px;
+        font-weight: 500;
+    }
+    
+    .book-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .meta-item {
+        background-color: #f2f7f2;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        color: #555;
+        display: flex;
+        align-items: center;
+    }
+    
+    .meta-label {
+        font-weight: 600;
+        margin-right: 6px;
+        color: #4CAF50;
+    }
+    
+    .book-description-section {
+        padding: 30px;
+    }
+    
+    .section-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #eee;
+    }
+    
+    .book-description {
+        color: #555;
+        line-height: 1.7;
+        font-size: 16px;
+        margin-bottom: 25px;
+    }
+    
+    .book-details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 25px;
+        padding: 30px;
+        background-color: #f9fbf9;
+        border-radius: 12px;
+    }
+    
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .detail-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #666;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+    }
+    
+    .detail-value {
+        font-size: 16px;
+        color: #333;
+        font-weight: 500;
+    }
+    
+    .book-actions {
+        padding: 20px 30px;
+        display: flex;
+        gap: 15px;
+        border-top: 1px solid #eee;
+        background-color: #f9f9f9;
+    }
+    
+    .btn {
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+    }
+    
+    .btn-primary {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+    }
+    
+    .btn-primary:hover {
+        background-color: #45a049;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+    }
+    
+    .btn-secondary {
+        background-color: #2196F3;
+        color: white;
+        border: none;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #1e88e5;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
+    }
+    
+    .pdf-preview {
+        width: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 20px;
+        border: 1px solid #eee;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .book-header {
+            flex-direction: column;
+        }
+        
+        .book-cover {
+            width: 100%;
+            max-width: 250px;
+            margin: 0 auto 20px;
+        }
+        
+        .book-primary-info {
+            width: 100%;
+        }
+        
+        .meta-item {
+            width: 100%;
+        }
+        
+        .book-actions {
+            flex-direction: column;
+        }
+        
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="book-details-container">
+    <h1 class="book-details-title">Book Details</h1>
+    
+    <div class="book-card">
+        <div class="book-header">
+            <img src="{{ book.thumbnail.url }}" alt="{{ book.Book_Title }}" class="book-cover">
+            
+            <div class="book-primary-info">
+                <h2 class="book-title">{{ book.Book_Title }}</h2>
+                <p class="book-author">by {{ book.Author_name }}</p>
+                
+                <div class="book-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Genre:</span> {{ book.Genre }}
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">ISBN:</span> {{ book.ISBN_Number }}
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Year:</span> {{ book.Publication_Year }}
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Copies:</span> {{ book.copies_available }} available
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="book-description-section">
+            <h3 class="section-title">Description</h3>
+            <p class="book-description">{{ book.Book_Description }}</p>
+            
+            <h3 class="section-title">Details</h3>
+            <div class="book-details-grid">
+                <div class="detail-item">
+                    <span class="detail-label">Publisher</span>
+                    <span class="detail-value">{{ book.Publisher }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Publication Year</span>
+                    <span class="detail-value">{{ book.Publication_Year }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">ISBN</span>
+                    <span class="detail-value">{{ book.ISBN_Number }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Location</span>
+                    <span class="detail-value">Rack {{ book.rack_number }}</span>
+                </div>
+            </div>
+        </div>
+        
+        {% if book.Book_PDF %}
+        <div class="book-description-section">
+            <h3 class="section-title">PDF Preview</h3>
+            <p>PDF file is available for this book.</p>
+        </div>
+        {% endif %}
+        
+        <div class="book-actions">
+            {% if book.Book_PDF %}
+            <a href="{{ book.Book_PDF.url }}" class="btn btn-primary" download>Download PDF</a>
+            {% endif %}
+            <a href="{% url 'allbooks' %}" class="btn btn-secondary">Back to All Books</a>
+        </div>
+    </div>
+</div>
+{% endblock viewbook %} 
